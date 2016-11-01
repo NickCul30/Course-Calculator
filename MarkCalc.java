@@ -1,4 +1,4 @@
-//Mark Calculator v1.00
+//Mark Calculator v1.01
 //Nicholas Culmone
 
 import java.util.*;
@@ -41,14 +41,23 @@ public class MarkCalc{
 		while(user != 0){
 			if(screen == 0){
 				space();
-				System.out.println("Mark Calculator v1.00\nNicholas Culmone 2016\n\n0. Exit\n1. New Course");
+				System.out.println("Mark Calculator v1.01\nNicholas Culmone 2016\n\n0. Exit\n1. New Course");
 				int cnt = 1;
+				double avg = 0;
+				double weightedAvg = 0;
+				double outOf = 0;
 
 				for(Course c : courses){
 					cnt ++;
 					System.out.println(cnt + ". " + c.getName() + " - " + round(c.getWeightedAvg(),2) + "%");
+					avg += c.getWeightedAvg();
+					weightedAvg += c.completed() * (c.getWeightedAvg() / 100);
+					outOf += c.completed();
 				}
-				System.out.println("");
+				avg /= cnt-1;
+				System.out.println("\nTotal Average: " + round(avg,2) + "%\nWeighted Average (Will equal average once all courses are completed): " + round(weightedAvg/outOf*100,2) + "%");
+				if(outOf == 0) System.out.println("Percentage of all Courses Completed: 0.0%\n");
+				else System.out.println("Percentage of all Courses Completed: " + 100 * outOf / (100 * (cnt-1)) + "%\n");
 
 				user = kb.nextInt();
 				kb.nextLine();
@@ -112,8 +121,6 @@ public class MarkCalc{
 
 
 		}
-
-
 
 		saveWrite = new PrintWriter("saveFile.txt", "UTF-8");
 		saveWrite.println("" + courses.size());
